@@ -5,6 +5,8 @@ import sys
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware as StarletteCORSMiddleware
 
 from app.clients.sonoras.db import init_db
 from app.mcp.server import mcp as _mcp
@@ -71,4 +73,17 @@ app.include_router(sonoras_router)
 
 # ─── MCP Mount ───────────────────────────────────────────────────────────────
 # FastAPI routes above take precedence; this sub-app catches /mcp, /sse, /messages/
-app.mount("/", Starlette(routes=list(_http_app.routes) + list(_sse_app.routes)))
+_CORS_ORIGINS = [
+    "https://claude.ai",
+    "https://sonorascarbonysal.com",
+    "https://www.sonorascarbonysal.com",
+]
+app.mount("/", Starlette(
+    routes=list(_http_app.routes) + list(_sse_app.routes),
+    middleware=[Middleware(
+        StarletteCORSMiddleware,
+        allow_origins=_CORS_ORIGINS,
+        allow_methods=["GET", "POST"],
+        allow_headers=["*"],
+    )],
+))
