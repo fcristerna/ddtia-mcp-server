@@ -57,8 +57,9 @@ app.add_middleware(
     allow_origins=[
         "https://sonorascarbonysal.com",
         "https://www.sonorascarbonysal.com",
+        "https://claude.ai",
     ],
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
