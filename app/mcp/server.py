@@ -11,6 +11,7 @@ from app.clients.sonoras.offers import _deactivate as _sonoras_deactivate
 from app.utils.datetime_parser import parse_natural_datetime
 from app.utils.lock import SlotAlreadyBookedError
 from app.utils.fb_cache import get_image as _get_cached_fb_image
+from app.config import VAULT_PATH
 
 os.makedirs("/tmp/ghl_locks", exist_ok=True)
 try:
@@ -175,3 +176,26 @@ def mcp_deactivate_sonoras_offer(offer_id: int) -> dict:
     except Exception as e:
         log.error(f"Error en MCP deactivate_sonoras_offer: {e}", exc_info=True)
         return {"deactivated": False, "error": str(e)}
+
+
+@mcp.tool(name="read_vault_file", description=(
+    "Lee un archivo .md del vault de DDTIA y devuelve su contenido. "
+    "Usar para consultar contexto de clientes, pendientes, ADRs, infra, etc. "
+    "Ejemplo de path: 'clientes/sonoras/CONTEXT.md'"
+))
+def mcp_read_vault_file(path: str) -> dict:
+    import os as _os
+    full_path = _os.path.join(VAULT_PATH, path)
+    if not _os.path.realpath(full_path).startswith(_os.path.realpath(VAULT_PATH)):
+        return {"error": "Acceso denegado"}
+    if not full_path.endswith(".md"):
+        return {"error": "Solo archivos .md"}
+    log.info(f"MCP read_vault_file | path: {path}")
+    try:
+        with open(full_path, "r", encoding="utf-8") as f:
+            return {"path": path, "content": f.read()}
+    except FileNotFoundError:
+        return {"error": f"Archivo no encontrado: {path}"}
+    except Exception as e:
+        log.error(f"Error en MCP read_vault_file: {e}", exc_info=True)
+        return {"error": str(e)}

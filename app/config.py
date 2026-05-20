@@ -18,3 +18,5 @@ SLOT_DURATION_MIN  = int(os.getenv("SLOT_DURATION_MIN", "30"))
 DAYS_AHEAD         = int(os.getenv("DAYS_AHEAD", "7"))
 
 GHL_BASE_URL = "https://services.leadconnectorhq.com"
+
+VAULT_PATH = os.getenv("VAULT_PATH", "/app/data/vault")

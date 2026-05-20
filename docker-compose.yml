@@ -19,6 +19,7 @@ services:
     volumes:
       - logs_data:/app/logs
       - data:/app/data
+      - /app/data/vault:/app/data/vault:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ghl-mcp.rule=Host(`mcp.despertartdigital.cloud`)"
