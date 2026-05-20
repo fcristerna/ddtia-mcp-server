@@ -3,10 +3,19 @@ services:
     build: .
     container_name: ghl-mcp-calendario
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
       LOG_FILE: /app/logs/app.log
+      API_SECRET_KEY:
+      DAYS_AHEAD:
+      FB_PAGE_ACCESS_TOKEN:
+      GHL_API_KEY:
+      GHL_ASSIGNED_USER:
+      GHL_CALENDAR_ID:
+      GHL_INBOUND_WEBHOOK_URL:
+      GHL_LOCATION_ID:
+      MCP_API_KEY:
+      SLOT_DURATION_MIN:
+      TIMEZONE:
     volumes:
       - logs_data:/app/logs
       - data:/app/data
